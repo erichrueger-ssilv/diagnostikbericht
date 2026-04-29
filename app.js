@@ -1,3 +1,5 @@
+const VERSION = "v1.3+";
+
 const { useState, useEffect, useMemo } = React;
 
 // --- Constants & Data ---
@@ -501,7 +503,7 @@ function App() {
             />
 
             <div className="title-section">
-                <h1>Diagnostikbericht Generator <span style={{ fontSize: '0.9rem', background: 'var(--primary)', color: 'white', padding: '2px 10px', borderRadius: '12px', verticalAlign: 'middle' }}>v1.3</span></h1>
+                <h1>Diagnostikbericht Generator <span style={{ fontSize: '0.9rem', background: 'var(--primary)', color: 'white', padding: '2px 10px', borderRadius: '12px', verticalAlign: 'middle' }}>{VERSION}</span></h1>
                 <p>Erstellen Sie präzise psychologische Berichte mit lokaler KI-Unterstützung.</p>
             </div>
 
