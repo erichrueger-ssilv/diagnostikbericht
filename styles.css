@@ -271,15 +271,26 @@ button {
     display: inline-block;
 }
 
-/* Report View */
+/* Report View (Rendered Markdown) */
 .report-content {
     background: #fff;
     padding: 3rem;
     border-radius: var(--radius-md);
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
-    white-space: pre-wrap;
     font-size: 1.05rem;
     line-height: 1.8;
     color: #334155;
     border: 1px solid #e2e8f0;
 }
+
+.report-content h1 { font-size: 1.8rem; color: #1e293b; margin-bottom: 1rem; border-bottom: 2px solid var(--primary); padding-bottom: 0.5rem; }
+.report-content h2 { font-size: 1.4rem; color: #334155; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+.report-content h3 { font-size: 1.15rem; color: #475569; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+.report-content p { margin-bottom: 0.75rem; }
+.report-content ul, .report-content ol { margin-bottom: 0.75rem; padding-left: 1.5rem; }
+.report-content li { margin-bottom: 0.25rem; }
+.report-content strong { color: #1e293b; }
+.report-content table { border-collapse: collapse; width: 100%; margin: 1rem 0; }
+.report-content th, .report-content td { border: 1px solid #cbd5e1; padding: 0.5rem; text-align: left; }
+.report-content th { background: #f1f5f9; font-weight: 600; }
+.report-content blockquote { border-left: 4px solid var(--primary); padding-left: 1rem; margin-left: 0; color: #64748b; }

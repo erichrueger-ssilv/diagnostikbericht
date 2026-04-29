@@ -344,10 +344,28 @@ function App() {
     const exportToWord = () => {
         if (!report) return;
         const personName = (vorname || nachname) ? `${vorname} ${nachname}`.trim() : "Diagnostikbericht";
+        const htmlContent = marked.parse(report);
         const html = `
             <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/1999/xhtml'>
-            <head><meta charset='utf-8'><title>Bericht</title></head>
-            <body><h1>Diagnostikbericht${personName ? ' – ' + personName : ''}</h1><pre style="font-family:Calibri,sans-serif;white-space:pre-wrap;">${report.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre></body>
+            <head><meta charset='utf-8'><title>Bericht</title>
+            <style>
+                body { font-family: Calibri, sans-serif; font-size: 11pt; line-height: 1.5; }
+                h1 { font-size: 18pt; color: #2d3748; }
+                h2 { font-size: 14pt; color: #4a5568; margin-top: 18pt; }
+                h3 { font-size: 12pt; color: #4a5568; }
+                p { margin: 6pt 0; }
+                ul, ol { margin: 6pt 0; padding-left: 24pt; }
+                li { margin: 3pt 0; }
+                strong { font-weight: 700; }
+                table { border-collapse: collapse; width: 100%; margin: 12pt 0; }
+                th, td { border: 1px solid #cbd5e0; padding: 6pt; }
+                th { background: #edf2f7; font-weight: 600; }
+            </style>
+            </head>
+            <body>
+                <h1>Diagnostikbericht${personName ? ' – ' + personName : ''}</h1>
+                ${htmlContent}
+            </body>
             </html>`;
         const converted = htmlDocx.asBlob(html);
         saveAs(converted, `${personName || 'Bericht'}.docx`);
@@ -435,7 +453,7 @@ Schreibe sachlich, präzise und fachlich fundiert.`;
             />
 
             <div className="title-section">
-                <h1>Diagnostikbericht Generator <span style={{ fontSize: '0.9rem', background: 'var(--primary)', color: 'white', padding: '2px 10px', borderRadius: '12px', verticalAlign: 'middle' }}>v1.1</span></h1>
+                <h1>Diagnostikbericht Generator <span style={{ fontSize: '0.9rem', background: 'var(--primary)', color: 'white', padding: '2px 10px', borderRadius: '12px', verticalAlign: 'middle' }}>v1.2</span></h1>
                 <p>Erstellen Sie präzise psychologische Berichte mit lokaler KI-Unterstützung.</p>
             </div>
 
@@ -571,9 +589,7 @@ Schreibe sachlich, präzise und fachlich fundiert.`;
                                 <p style={{ color: 'var(--text-muted)' }}>KI erstellt den Bericht...</p>
                             </div>
                         ) : (
-                            <div className="report-content animate-fade-in">
-                                {report}
-                            </div>
+                            <div className="report-content animate-fade-in" dangerouslySetInnerHTML={{ __html: marked.parse(report) }} />
                         )}
                     </div>
                 </div>
