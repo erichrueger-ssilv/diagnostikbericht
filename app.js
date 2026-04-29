@@ -231,6 +231,33 @@ function IndexTable({ rows, onUpdate, onAdd, label, konfidenz, sonstiges }) {
     );
 }
 
+const DEFAULT_PROMPT_TEMPLATE = `Erstelle einen professionellen psychologischen Diagnostikbericht auf Deutsch.
+Name der Testperson: {{PERSON_NAME}}
+Pronomen: {{PRON_NOM}} / {{PRON_DAT}}
+Alter: {{ALTER}}
+Testverfahren: {{TEST}}
+
+Anlass: {{ANLASS}}
+Zusätzliche Verfahren: {{VERFAHREN}}
+Verhaltensbeobachtung: {{VERHALTEN}}
+
+Ergebnisse Primäre Indizes:
+{{PRIMAERE_IDX}}
+
+Ergebnisse Sekundäre Indizes:
+{{SEKUNDAERE_IDX}}
+
+Ergebnisse Untertests:
+{{UNTERTESTS}}
+
+Gesamtinterpretation: {{INTERPRETATION}}
+Empfehlungen: {{EMPFEHLUNGEN}}
+
+Gliederung: Anlass, Testverfahren, Verhaltensbeobachtung, Ergebnisse, Interpretation, Empfehlungen.
+Schreibe sachlich, präzise und fachlich fundiert.`;
+
+const DEFAULT_SYSTEM_PROMPT = `Du bist ein erfahrener psychologischer Diagnostiker. Du erstellst professionelle, sachliche und präzise Diagnostikberichte auf Deutsch. Berücksichtige alle angegebenen Werte und formuliere fachlich fundiert.`;
+
 function SettingsPanel({ isOpen, onClose, config, setConfig }) {
     const [models, setModels] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -277,9 +304,36 @@ function SettingsPanel({ isOpen, onClose, config, setConfig }) {
                     </div>
                 </div>
 
-                <button className="btn-primary" onClick={() => { StorageManager.save('ai_config', config); onClose(); }}>
-                    Speichern
-                </button>
+                <div style={{ marginBottom: '1.5rem' }}>
+                    <label>System-Prompt</label>
+                    <textarea
+                        value={config.systemPrompt || DEFAULT_SYSTEM_PROMPT}
+                        onChange={e => setConfig({...config, systemPrompt: e.target.value})}
+                        rows={3}
+                        style={{ width: '100%', resize: 'vertical', fontFamily: 'inherit', padding: '0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)' }}
+                    />
+                    <small style={{ color: 'var(--text-muted)' }}>Definiert die Rolle und das Verhalten der KI.</small>
+                </div>
+
+                <div style={{ marginBottom: '1.5rem' }}>
+                    <label>Berichts-Prompt Template</label>
+                    <textarea
+                        value={config.promptTemplate || DEFAULT_PROMPT_TEMPLATE}
+                        onChange={e => setConfig({...config, promptTemplate: e.target.value})}
+                        rows={8}
+                        style={{ width: '100%', resize: 'vertical', fontFamily: 'inherit', padding: '0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)' }}
+                    />
+                    <small style={{ color: 'var(--text-muted)' }}>Verfügbare Platzhalter: {{PERSON_NAME}}, {{PRON_NOM}}, {{PRON_DAT}}, {{ALTER}}, {{TEST}}, {{ANLASS}}, {{VERFAHREN}}, {{VERHALTEN}}, {{PRIMAERE_IDX}}, {{SEKUNDAERE_IDX}}, {{UNTERTESTS}}, {{INTERPRETATION}}, {{EMPFEHLUNGEN}}</small>
+                </div>
+
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <button className="btn-primary" onClick={() => { StorageManager.save('ai_config', config); onClose(); }}>
+                        Speichern
+                    </button>
+                    <button onClick={() => setConfig({...config, systemPrompt: DEFAULT_SYSTEM_PROMPT, promptTemplate: DEFAULT_PROMPT_TEMPLATE})} style={{ padding: '0.75rem 1.5rem', borderRadius: 'var(--radius-sm)', background: 'white', border: '1px solid var(--border)' }}>
+                        Zurücksetzen
+                    </button>
+                </div>
             </div>
         </>
     );
@@ -393,30 +447,21 @@ function App() {
         const pronNom = geschlecht === "Männlich" ? "Er" : geschlecht === "Weiblich" ? "Sie" : "Es";
         const pronDat = geschlecht === "Männlich" ? "ihm" : geschlecht === "Weiblich" ? "ihr" : "ihm/ihr";
 
-        const prompt = `Erstelle einen professionellen psychologischen Diagnostikbericht auf Deutsch.
-Name der Testperson: ${personName}
-Pronomen: ${pronNom} / ${pronDat}
-Alter: ${alter}
-Testverfahren: ${testauswahl}
-
-Anlass: ${anlass}
-Zusätzliche Verfahren: ${testverfahrenText}
-Verhaltensbeobachtung: ${verhalten}
-
-Ergebnisse Primäre Indizes:
-${fmtIdx(primaereIndizes)}
-
-Ergebnisse Sekundäre Indizes:
-${fmtIdx(sekundaereIndizes)}
-
-Ergebnisse Untertests:
-${fmtUT(untertests)}
-
-Gesamtinterpretation: ${interpretation}
-Empfehlungen: ${empfehlungen}
-
-Gliederung: Anlass, Testverfahren, Verhaltensbeobachtung, Ergebnisse, Interpretation, Empfehlungen.
-Schreibe sachlich, präzise und fachlich fundiert.`;
+        const template = config.promptTemplate || DEFAULT_PROMPT_TEMPLATE;
+        const prompt = template
+            .replace(/\{\{PERSON_NAME\}\}/g, personName)
+            .replace(/\{\{PRON_NOM\}\}/g, pronNom)
+            .replace(/\{\{PRON_DAT\}\}/g, pronDat)
+            .replace(/\{\{ALTER\}\}/g, alter || "-")
+            .replace(/\{\{TEST\}\}/g, testauswahl || "-")
+            .replace(/\{\{ANLASS\}\}/g, anlass || "(keine Angaben)")
+            .replace(/\{\{VERFAHREN\}\}/g, testverfahrenText || "(keine Angaben)")
+            .replace(/\{\{VERHALTEN\}\}/g, verhalten || "(keine Angaben)")
+            .replace(/\{\{PRIMAERE_IDX\}\}/g, fmtIdx(primaereIndizes))
+            .replace(/\{\{SEKUNDAERE_IDX\}\}/g, fmtIdx(sekundaereIndizes))
+            .replace(/\{\{UNTERTESTS\}\}/g, fmtUT(untertests))
+            .replace(/\{\{INTERPRETATION\}\}/g, interpretation || "(keine Angaben)")
+            .replace(/\{\{EMPFEHLUNGEN\}\}/g, empfehlungen || "(keine Angaben)");
 
         try {
             const res = await fetch(`${config.baseUrl}/v1/chat/completions`, {
@@ -427,7 +472,10 @@ Schreibe sachlich, präzise und fachlich fundiert.`;
                 },
                 body: JSON.stringify({
                     model: config.model,
-                    messages: [{ role: "user", content: prompt }],
+                    messages: [
+                        { role: "system", content: config.systemPrompt || DEFAULT_SYSTEM_PROMPT },
+                        { role: "user", content: prompt }
+                    ],
                     temperature: 0.7
                 })
             });
@@ -453,7 +501,7 @@ Schreibe sachlich, präzise und fachlich fundiert.`;
             />
 
             <div className="title-section">
-                <h1>Diagnostikbericht Generator <span style={{ fontSize: '0.9rem', background: 'var(--primary)', color: 'white', padding: '2px 10px', borderRadius: '12px', verticalAlign: 'middle' }}>v1.2</span></h1>
+                <h1>Diagnostikbericht Generator <span style={{ fontSize: '0.9rem', background: 'var(--primary)', color: 'white', padding: '2px 10px', borderRadius: '12px', verticalAlign: 'middle' }}>v1.3</span></h1>
                 <p>Erstellen Sie präzise psychologische Berichte mit lokaler KI-Unterstützung.</p>
             </div>
 
