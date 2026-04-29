@@ -341,6 +341,18 @@ function App() {
     const updUT = (i, val) =>
         setUntertests(prev => prev.map((r, idx) => idx === i ? { ...r, wertpunkte: val } : r));
 
+    const exportToWord = () => {
+        if (!report) return;
+        const personName = (vorname || nachname) ? `${vorname} ${nachname}`.trim() : "Diagnostikbericht";
+        const html = `
+            <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/1999/xhtml'>
+            <head><meta charset='utf-8'><title>Bericht</title></head>
+            <body><h1>Diagnostikbericht${personName ? ' – ' + personName : ''}</h1><pre style="font-family:Calibri,sans-serif;white-space:pre-wrap;">${report.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre></body>
+            </html>`;
+        const converted = htmlDocx.asBlob(html);
+        saveAs(converted, `${personName || 'Bericht'}.docx`);
+    };
+
     const generateReport = async () => {
         if (!config.apiKey || !config.model) {
             alert("Bitte konfigurieren Sie zuerst den API Key und das Modell in den Einstellungen.");
@@ -423,7 +435,7 @@ Schreibe sachlich, präzise und fachlich fundiert.`;
             />
 
             <div className="title-section">
-                <h1>Diagnostikbericht Generator <span style={{ fontSize: '0.9rem', background: 'var(--primary)', color: 'white', padding: '2px 10px', borderRadius: '12px', verticalAlign: 'middle' }}>v1.0</span></h1>
+                <h1>Diagnostikbericht Generator <span style={{ fontSize: '0.9rem', background: 'var(--primary)', color: 'white', padding: '2px 10px', borderRadius: '12px', verticalAlign: 'middle' }}>v1.1</span></h1>
                 <p>Erstellen Sie präzise psychologische Berichte mit lokaler KI-Unterstützung.</p>
             </div>
 
@@ -538,6 +550,12 @@ Schreibe sachlich, präzise und fachlich fundiert.`;
                             <button onClick={() => setStep("form")} style={{ background: 'none', color: 'var(--primary)', fontWeight: 600 }}><Icon name="arrow-left" /> Zurück</button>
                             <h2 style={{ margin: 0, color: 'var(--text-main)' }}>Bericht</h2>
                             <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                <button 
+                                    onClick={exportToWord}
+                                    style={{ padding: '0.5rem 1rem', borderRadius: 'var(--radius-sm)', background: '#2563eb', color: 'white' }}
+                                >
+                                    <Icon name="file-text" size={18} /> Word
+                                </button>
                                 <button 
                                     onClick={() => { navigator.clipboard.writeText(report); setCopied(true); setTimeout(() => setCopied(false), 2000); }}
                                     style={{ padding: '0.5rem 1rem', borderRadius: 'var(--radius-sm)', background: copied ? '#10b981' : 'var(--primary)', color: 'white' }}
