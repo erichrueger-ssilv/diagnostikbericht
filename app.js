@@ -323,7 +323,7 @@ function SettingsPanel({ isOpen, onClose, config, setConfig }) {
                         rows={8}
                         style={{ width: '100%', resize: 'vertical', fontFamily: 'inherit', padding: '0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)' }}
                     />
-                    <small style={{ color: 'var(--text-muted)' }}>Verfügbare Platzhalter: {{PERSON_NAME}}, {{PRON_NOM}}, {{PRON_DAT}}, {{ALTER}}, {{TEST}}, {{ANLASS}}, {{VERFAHREN}}, {{VERHALTEN}}, {{PRIMAERE_IDX}}, {{SEKUNDAERE_IDX}}, {{UNTERTESTS}}, {{INTERPRETATION}}, {{EMPFEHLUNGEN}}</small>
+                    <small style={{ color: 'var(--text-muted)' }}>Verfügbare Platzhalter: {'{PERSON_NAME}'}, {'{PRON_NOM}'}, {'{PRON_DAT}'}, {'{ALTER}'}, {'{TEST}'}, {'{ANLASS}'}, {'{VERFAHREN}'}, {'{VERHALTEN}'}, {'{PRIMAERE_IDX}'}, {'{SEKUNDAERE_IDX}'}, {'{UNTERTESTS}'}, {'{INTERPRETATION}'}, {'{EMPFEHLUNGEN}'}</small>
                 </div>
 
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
