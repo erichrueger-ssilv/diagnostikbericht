@@ -1,0 +1,648 @@
+/* ═══════════════════════════════════════════════════════════════
+   ZSL Theme - Design-System basierend auf https://zsl-bw.de/
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Header/Footer nur im ZSL-Theme sichtbar ── */
+.zsl-header,
+.zsl-footer {
+    display: none;
+}
+
+[data-theme="zsl"] .zsl-header,
+[data-theme="zsl"] .zsl-footer {
+    display: block;
+}
+
+/* ── CSS Custom Properties Overrides ── */
+[data-theme="zsl"] {
+    --zsl-dark: #2a2623;
+    --zsl-dark-light: #524942;
+    --zsl-gray: #cbc6bd;
+    --zsl-gray-light: #e4e1dc;
+    --zsl-gray-bg: #f4f3f1;
+    --zsl-yellow: #fffc00;
+    --zsl-white: #ffffff;
+
+    --primary: var(--zsl-dark);
+    --primary-dark: #1a1613;
+    --primary-light: var(--zsl-dark-light);
+    --secondary: var(--zsl-dark-light);
+    --accent: var(--zsl-yellow);
+
+    --bg-main: var(--zsl-white);
+    --bg-card: var(--zsl-gray-bg);
+    --text-main: var(--zsl-dark);
+    --text-muted: var(--zsl-dark-light);
+    --border: var(--zsl-gray);
+
+    --shadow-sm: none;
+    --shadow-md: none;
+    --shadow-lg: none;
+
+    --glass-bg: var(--zsl-gray-bg);
+    --glass-border: var(--zsl-gray-light);
+
+    --radius-sm: 3px;
+    --radius-md: 3px;
+    --radius-lg: 3px;
+
+    --font-heading: Georgia, "Times New Roman", Times, serif;
+    --font-body: Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --body-gradient: none;
+}
+
+/* ── Base / Body ── */
+[data-theme="zsl"] body {
+    font-family: var(--font-body);
+    font-size: 18px;
+    line-height: 27px;
+    background: var(--zsl-white);
+    background-image: none;
+    color: var(--zsl-dark);
+    padding: 0;
+}
+
+/* ── ZSL Header ── */
+[data-theme="zsl"] .zsl-header {
+    background: var(--zsl-yellow);
+    border-bottom: none;
+    padding: 1.25rem 0;
+    margin-bottom: 2rem;
+}
+
+[data-theme="zsl"] .zsl-header-inner {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+[data-theme="zsl"] .zsl-header-logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+[data-theme="zsl"] .zsl-header-logo img {
+    height: 50px;
+    width: auto;
+}
+
+[data-theme="zsl"] .zsl-header-nav {
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--zsl-dark);
+}
+
+/* ── ZSL Footer ── */
+[data-theme="zsl"] .zsl-footer {
+    background: var(--zsl-dark);
+    color: var(--zsl-white);
+    padding: 2.5rem 0;
+    margin-top: 80px;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+[data-theme="zsl"] .zsl-footer-inner {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+[data-theme="zsl"] .zsl-footer-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+[data-theme="zsl"] .zsl-footer-logo img {
+    height: 40px;
+    width: auto;
+}
+
+[data-theme="zsl"] .zsl-footer-text {
+    color: var(--zsl-white);
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+[data-theme="zsl"] .zsl-footer-text strong {
+    font-weight: 700;
+}
+
+[data-theme="zsl"] .zsl-footer-right {
+    text-align: right;
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+}
+
+/* ── Main Container ── */
+[data-theme="zsl"] .app-container {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* ── Typography ── */
+[data-theme="zsl"] h1 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--zsl-dark);
+    margin: 0 0 1rem 0;
+    font-size: 48px;
+    line-height: 57.6px;
+    letter-spacing: normal;
+}
+
+[data-theme="zsl"] h2,
+[data-theme="zsl"] h3 {
+    font-family: var(--font-body);
+    font-weight: 700;
+    color: var(--zsl-dark);
+    margin: 0 0 1rem 0;
+}
+
+[data-theme="zsl"] h2 {
+    font-size: 32px;
+    line-height: 41.6px;
+    margin-top: 2rem;
+}
+
+[data-theme="zsl"] h3 {
+    font-size: 24px;
+    line-height: 32px;
+    margin-top: 1.5rem;
+}
+
+[data-theme="zsl"] p {
+    font-family: var(--font-body);
+    font-size: 18px;
+    line-height: 27px;
+    margin-bottom: 24px;
+    color: var(--zsl-dark);
+}
+
+/* ── Title Section ── */
+[data-theme="zsl"] .title-section {
+    text-align: left;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--zsl-yellow);
+}
+
+[data-theme="zsl"] .title-section h1 {
+    font-family: var(--font-heading);
+    font-size: 48px;
+    background: none;
+    -webkit-text-fill-color: var(--zsl-dark);
+    color: var(--zsl-dark);
+    letter-spacing: normal;
+    margin-bottom: 0.5rem;
+}
+
+[data-theme="zsl"] .title-section p {
+    font-family: var(--font-body);
+    color: var(--zsl-dark-light);
+    font-size: 18px;
+    line-height: 27px;
+    margin-bottom: 0;
+}
+
+/* ── Glass Cards → ZSL Cards ── */
+[data-theme="zsl"] .glass-card {
+    background: var(--zsl-gray-bg);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: 1px solid var(--zsl-gray-light);
+    border-radius: 3px;
+    box-shadow: none;
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+[data-theme="zsl"] .glass-card:hover {
+    box-shadow: none;
+}
+
+/* ── Form Elements ── */
+[data-theme="zsl"] label {
+    display: block;
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--zsl-dark);
+    margin-bottom: 8px;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+[data-theme="zsl"] input,
+[data-theme="zsl"] select,
+[data-theme="zsl"] textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--zsl-gray);
+    border-radius: 3px;
+    background: var(--zsl-white);
+    font-family: var(--font-body);
+    font-size: 18px;
+    line-height: 27px;
+    color: var(--zsl-dark);
+    transition: border-color 0.2s ease;
+}
+
+[data-theme="zsl"] input:focus,
+[data-theme="zsl"] select:focus,
+[data-theme="zsl"] textarea:focus {
+    outline: none;
+    border-color: var(--zsl-dark);
+    box-shadow: 0 0 0 3px rgba(42, 38, 35, 0.1);
+    background: var(--zsl-white);
+}
+
+[data-theme="zsl"] input::placeholder,
+[data-theme="zsl"] textarea::placeholder {
+    color: var(--zsl-gray);
+    font-size: 16px;
+}
+
+/* ── Buttons ── */
+[data-theme="zsl"] button {
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-weight: 700;
+    transition: all 0.2s ease;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+[data-theme="zsl"] .btn-primary {
+    background: var(--zsl-yellow);
+    color: var(--zsl-dark);
+    padding: 16px 24px;
+    border-radius: 3px;
+    font-size: 18px;
+    font-weight: 700;
+    box-shadow: none;
+    width: 100%;
+    margin-top: 2rem;
+    text-transform: none;
+}
+
+[data-theme="zsl"] .btn-primary:hover {
+    background: #e6e300;
+    transform: none;
+    box-shadow: none;
+}
+
+[data-theme="zsl"] .btn-primary:active {
+    transform: none;
+}
+
+/* ── Test Selection Buttons ── */
+[data-theme="zsl"] .test-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+[data-theme="zsl"] .test-buttons button {
+    background: var(--zsl-white);
+    color: var(--zsl-dark);
+    border: 1px solid var(--zsl-gray);
+    border-radius: 3px;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+[data-theme="zsl"] .test-buttons button:hover {
+    background: var(--zsl-gray-bg);
+    border-color: var(--zsl-dark);
+}
+
+[data-theme="zsl"] .test-buttons button.active {
+    background: var(--zsl-dark);
+    color: var(--zsl-white);
+    border-color: var(--zsl-dark);
+}
+
+/* ── Step Indicator ── */
+[data-theme="zsl"] .step-indicator {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+[data-theme="zsl"] .step-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--zsl-gray);
+}
+
+[data-theme="zsl"] .step-dot.active {
+    background: var(--zsl-dark);
+    box-shadow: none;
+}
+
+/* ── Settings Panel ── */
+[data-theme="zsl"] .settings-trigger {
+    background: var(--zsl-gray-bg);
+    backdrop-filter: none;
+    border: 1px solid var(--zsl-gray-light);
+    color: var(--zsl-dark);
+    box-shadow: none;
+}
+
+[data-theme="zsl"] .settings-panel {
+    background: var(--zsl-white);
+    box-shadow: -4px 0 12px rgba(42, 38, 35, 0.1);
+}
+
+[data-theme="zsl"] .settings-panel h2 {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    line-height: 32px;
+    margin-bottom: 1.5rem;
+}
+
+[data-theme="zsl"] .overlay {
+    background: rgba(42, 38, 35, 0.3);
+    backdrop-filter: none;
+}
+
+/* ── Data Tables ── */
+[data-theme="zsl"] .data-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+}
+
+[data-theme="zsl"] .data-table th {
+    text-align: left;
+    padding: 0.5rem 1rem;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--zsl-dark-light);
+    text-transform: none;
+}
+
+[data-theme="zsl"] .data-table td {
+    padding: 1rem;
+    background: var(--zsl-gray-bg);
+    border: none;
+}
+
+[data-theme="zsl"] .data-table tr td:first-child {
+    border-radius: 3px 0 0 3px;
+}
+
+[data-theme="zsl"] .data-table tr td:last-child {
+    border-radius: 0 3px 3px 0;
+}
+
+/* ── Report Content ── */
+[data-theme="zsl"] .report-content {
+    background: var(--zsl-white);
+    padding: 2rem;
+    border-radius: 3px;
+    box-shadow: none;
+    font-family: var(--font-body);
+    font-size: 18px;
+    line-height: 27px;
+    color: var(--zsl-dark);
+    border: 1px solid var(--zsl-gray-light);
+}
+
+[data-theme="zsl"] .report-content h1 {
+    font-family: var(--font-heading);
+    font-size: 32px;
+    color: var(--zsl-dark);
+    border-bottom: 3px solid var(--zsl-yellow);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+[data-theme="zsl"] .report-content h2 {
+    font-family: var(--font-body);
+    font-size: 24px;
+    color: var(--zsl-dark);
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+[data-theme="zsl"] .report-content h3 {
+    font-family: var(--font-body);
+    font-size: 20px;
+    color: var(--zsl-dark-light);
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+[data-theme="zsl"] .report-content p {
+    margin-bottom: 1rem;
+}
+
+[data-theme="zsl"] .report-content strong {
+    color: var(--zsl-dark);
+    font-weight: 700;
+}
+
+[data-theme="zsl"] .report-content a {
+    color: var(--zsl-dark);
+    text-decoration: underline;
+    text-decoration-color: var(--zsl-yellow);
+    text-underline-offset: 3px;
+}
+
+[data-theme="zsl"] .report-content a:hover {
+    text-decoration-color: var(--zsl-dark);
+}
+
+[data-theme="zsl"] .report-content blockquote {
+    border-left: 4px solid var(--zsl-yellow);
+    padding-left: 1rem;
+    margin-left: 0;
+    color: var(--zsl-dark-light);
+    font-style: italic;
+}
+
+[data-theme="zsl"] .report-content table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1rem 0;
+}
+
+[data-theme="zsl"] .report-content th,
+[data-theme="zsl"] .report-content td {
+    border: 1px solid var(--zsl-gray);
+    padding: 0.75rem;
+    text-align: left;
+}
+
+[data-theme="zsl"] .report-content th {
+    background: var(--zsl-gray-bg);
+    font-weight: 700;
+}
+
+/* ── Grid Layouts ── */
+[data-theme="zsl"] .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+/* ── Radio & Checkbox Styles ── */
+[data-theme="zsl"] input[type="radio"] {
+    width: auto;
+    accent-color: var(--zsl-dark);
+}
+
+/* ── Links ── */
+[data-theme="zsl"] a {
+    color: var(--zsl-dark);
+    text-decoration: none;
+}
+
+[data-theme="zsl"] a:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--zsl-yellow);
+}
+
+/* ── Version Badge ── */
+[data-theme="zsl"] .version-badge {
+    display: inline-block;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    background: var(--zsl-yellow);
+    color: var(--zsl-dark);
+    padding: 2px 10px;
+    border-radius: 3px;
+    font-weight: 700;
+    vertical-align: middle;
+}
+
+/* ── Section Labels ── */
+[data-theme="zsl"] .section-label {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--zsl-dark-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--zsl-gray-light);
+}
+
+/* ── Theme Toggle ── */
+.theme-toggle {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.theme-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    border: 1px solid var(--zsl-gray);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.theme-option:hover {
+    border-color: var(--zsl-dark);
+    background: var(--zsl-gray-bg);
+}
+
+.theme-option input[type="radio"] {
+    width: auto;
+    margin-top: 2px;
+    accent-color: var(--zsl-dark);
+}
+
+.theme-option-label {
+    font-weight: 700;
+    color: var(--zsl-dark);
+    font-size: 16px;
+}
+
+.theme-option-desc {
+    font-size: 14px;
+    color: var(--zsl-dark-light);
+    line-height: 1.4;
+}
+
+/* ── Tab Buttons ── */
+[data-theme="zsl"] .tab-button {
+    background: var(--zsl-white);
+    color: var(--zsl-dark);
+    border: 1px solid var(--zsl-gray);
+    border-radius: 3px;
+    font-family: var(--font-body);
+}
+
+[data-theme="zsl"] .tab-button:hover {
+    background: var(--zsl-gray-bg);
+    border-color: var(--zsl-dark);
+}
+
+[data-theme="zsl"] .tab-button.active {
+    background: var(--zsl-dark);
+    color: var(--zsl-white);
+    border-color: var(--zsl-dark);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    [data-theme="zsl"] h1 {
+        font-size: 32px;
+        line-height: 40px;
+    }
+
+    [data-theme="zsl"] h2 {
+        font-size: 24px;
+        line-height: 32px;
+    }
+
+    [data-theme="zsl"] body {
+        font-size: 16px;
+        line-height: 24px;
+    }
+
+    [data-theme="zsl"] .zsl-footer-inner {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    [data-theme="zsl"] .zsl-footer-right {
+        text-align: left;
+    }
+
+    [data-theme="zsl"] .grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    [data-theme="zsl"] .settings-panel {
+        width: 100%;
+    }
+
+    [data-theme="zsl"] .zsl-header-logo img {
+        height: 36px;
+    }
+}

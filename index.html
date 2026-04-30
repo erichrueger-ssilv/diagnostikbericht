@@ -2,10 +2,18 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="description" content="Erstellen Sie präzise psychologische Berichte mit lokaler KI-Unterstützung.">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="DiagBericht">
     <title>Diagnostikbericht-Generator</title>
-    <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json?v=1.4">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg?v=1.4">
+    <link rel="apple-touch-icon" href="favicon.svg?v=1.4">
+    <link rel="stylesheet" href="styles.css?v=1.4">
+    <link rel="stylesheet" href="zsl-theme.css?v=1.4">
     <!-- Google Fonts: Inter & Outfit -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,6 +30,20 @@
 </head>
 <body>
     <div id="root"></div>
-    <script type="text/babel" src="app.js"></script>
+    <script type="text/babel" src="app.js?v=1.4"></script>
+    <script>
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then((registration) => {
+                        console.log('SW registered:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.warn('SW registration failed:', error);
+                    });
+            });
+        }
+    </script>
 </body>
 </html>

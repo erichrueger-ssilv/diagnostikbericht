@@ -260,7 +260,7 @@ Schreibe sachlich, präzise und fachlich fundiert.`;
 
 const DEFAULT_SYSTEM_PROMPT = `Du bist ein erfahrener psychologischer Diagnostiker. Du erstellst professionelle, sachliche und präzise Diagnostikberichte auf Deutsch. Berücksichtige alle angegebenen Werte und formuliere fachlich fundiert.`;
 
-function SettingsPanel({ isOpen, onClose, config, setConfig }) {
+function SettingsPanel({ isOpen, onClose, config, setConfig, theme, setTheme }) {
     const [models, setModels] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -280,59 +280,166 @@ function SettingsPanel({ isOpen, onClose, config, setConfig }) {
         setLoading(false);
     };
 
+    // Focus trap for modal
+    useEffect(() => {
+        if (!isOpen) return;
+        
+        const panel = document.getElementById('settings-panel');
+        if (!panel) return;
+        
+        const focusableElements = panel.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+        
+        firstElement?.focus();
+        
+        const handleTabKey = (e) => {
+            if (e.key !== 'Tab') return;
+            
+            if (e.shiftKey && document.activeElement === firstElement) {
+                e.preventDefault();
+                lastElement.focus();
+            } else if (!e.shiftKey && document.activeElement === lastElement) {
+                e.preventDefault();
+                firstElement.focus();
+            }
+        };
+        
+        panel.addEventListener('keydown', handleTabKey);
+        return () => panel.removeEventListener('keydown', handleTabKey);
+    }, [isOpen]);
+
     return (
         <>
-            <div className={`overlay ${isOpen ? 'visible' : ''}`} onClick={onClose}></div>
-            <div className={`settings-panel ${isOpen ? 'open' : ''}`}>
+            <div 
+                className={`overlay ${isOpen ? 'visible' : ''}`} 
+                onClick={onClose}
+                role="presentation"
+                aria-hidden={!isOpen}
+            ></div>
+            <div 
+                id="settings-panel"
+                className={`settings-panel ${isOpen ? 'open' : ''}`}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="settings-title"
+                aria-hidden={!isOpen}
+            >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-                    <h2 style={{ color: 'var(--text-main)', margin: 0 }}>KI Einstellungen</h2>
-                    <button onClick={onClose} style={{ background: 'none', color: 'var(--text-muted)' }}><Icon name="x" /></button>
+                    <h2 id="settings-title" style={{ color: 'var(--text-main)', margin: 0 }}>KI Einstellungen</h2>
+                    <button 
+                        onClick={onClose} 
+                        style={{ background: 'none', color: 'var(--text-muted)' }}
+                        aria-label="Einstellungen schließen"
+                        title="Schließen (Escape)"
+                    >
+                        <Icon name="x" />
+                    </button>
                 </div>
 
                 <InputField label="API Base URL" value={config.baseUrl} onChange={v => setConfig({...config, baseUrl: v})} placeholder="https://..." />
                 <InputField label="API Key" value={config.apiKey} onChange={v => setConfig({...config, apiKey: v})} type="password" placeholder="sk-..." icon="key" />
                 
                 <div style={{ marginBottom: '1.5rem' }}>
-                    <label>Modell</label>
+                    <label htmlFor="model-select">Modell</label>
                     <div style={{ display: 'flex', gap: '0.5rem' }}>
-                        <select style={{ flex: 1 }} value={config.model} onChange={e => setConfig({...config, model: e.target.value})}>
+                        <select 
+                            id="model-select"
+                            style={{ flex: 1 }} 
+                            value={config.model} 
+                            onChange={e => setConfig({...config, model: e.target.value})}
+                            aria-label="KI-Modell auswählen"
+                        >
                             <option value="">- Modell wählen -</option>
                             {models.map(m => <option key={m} value={m}>{m}</option>)}
                             {config.model && !models.includes(config.model) && <option value={config.model}>{config.model}</option>}
                         </select>
-                        <button onClick={loadModels} style={{ padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)' }}>
+                        <button 
+                            onClick={loadModels} 
+                            style={{ padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)' }}
+                            aria-label="Modelle neu laden"
+                            title="Modelle aktualisieren"
+                        >
                             <Icon name="refresh-cw" size={18} className={loading ? "animate-spin" : ""} />
                         </button>
                     </div>
                 </div>
 
                 <div style={{ marginBottom: '1.5rem' }}>
-                    <label>System-Prompt</label>
+                    <label htmlFor="system-prompt">System-Prompt</label>
                     <textarea
+                        id="system-prompt"
                         value={config.systemPrompt || DEFAULT_SYSTEM_PROMPT}
                         onChange={e => setConfig({...config, systemPrompt: e.target.value})}
                         rows={3}
                         style={{ width: '100%', resize: 'vertical', fontFamily: 'inherit', padding: '0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)' }}
+                        aria-describedby="system-prompt-help"
                     />
-                    <small style={{ color: 'var(--text-muted)' }}>Definiert die Rolle und das Verhalten der KI.</small>
+                    <small id="system-prompt-help" style={{ color: 'var(--text-muted)' }}>Definiert die Rolle und das Verhalten der KI.</small>
                 </div>
 
                 <div style={{ marginBottom: '1.5rem' }}>
-                    <label>Berichts-Prompt Template</label>
+                    <label htmlFor="prompt-template">Berichts-Prompt Template</label>
                     <textarea
+                        id="prompt-template"
                         value={config.promptTemplate || DEFAULT_PROMPT_TEMPLATE}
                         onChange={e => setConfig({...config, promptTemplate: e.target.value})}
                         rows={8}
                         style={{ width: '100%', resize: 'vertical', fontFamily: 'inherit', padding: '0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)' }}
+                        aria-describedby="prompt-template-help"
                     />
-                    <small style={{ color: 'var(--text-muted)' }}>Verfügbare Platzhalter: {'{PERSON_NAME}'}, {'{PRON_NOM}'}, {'{PRON_DAT}'}, {'{ALTER}'}, {'{TEST}'}, {'{ANLASS}'}, {'{VERFAHREN}'}, {'{VERHALTEN}'}, {'{PRIMAERE_IDX}'}, {'{SEKUNDAERE_IDX}'}, {'{UNTERTESTS}'}, {'{INTERPRETATION}'}, {'{EMPFEHLUNGEN}'}</small>
+                    <small id="prompt-template-help" style={{ color: 'var(--text-muted)' }}>Verfügbare Platzhalter: {'{PERSON_NAME}'}, {'{PRON_NOM}'}, {'{PRON_DAT}'}, {'{ALTER}'}, {'{TEST}'}, {'{ANLASS}'}, {'{VERFAHREN}'}, {'{VERHALTEN}'}, {'{PRIMAERE_IDX}'}, {'{SEKUNDAERE_IDX}'}, {'{UNTERTESTS}'}, {'{INTERPRETATION}'}, {'{EMPFEHLUNGEN}'}</small>
                 </div>
 
+                <fieldset style={{ marginBottom: '1.5rem', border: 'none', padding: 0 }}>
+                    <legend style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.5rem' }}>Erscheinungsbild</legend>
+                    <div className="theme-toggle" role="radiogroup" aria-label="Theme auswählen">
+                        <label className="theme-option" style={{ cursor: 'pointer' }}>
+                            <input
+                                type="radio"
+                                name="theme"
+                                value="modern"
+                                checked={theme === 'modern'}
+                                onChange={() => setTheme('modern')}
+                                aria-label="Modernes Design mit Glassmorphism"
+                            />
+                            <div>
+                                <div className="theme-option-label">Modern</div>
+                                <div className="theme-option-desc">Aktuelles Design mit Glassmorphism</div>
+                            </div>
+                        </label>
+                        <label className="theme-option" style={{ cursor: 'pointer' }}>
+                            <input
+                                type="radio"
+                                name="theme"
+                                value="zsl"
+                                checked={theme === 'zsl'}
+                                onChange={() => setTheme('zsl')}
+                                aria-label="ZSL Design basierend auf zsl-bw.de"
+                            />
+                            <div>
+                                <div className="theme-option-label">ZSL</div>
+                                <div className="theme-option-desc">Offizielles Design (zsl-bw.de)</div>
+                            </div>
+                        </label>
+                    </div>
+                </fieldset>
+
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    <button className="btn-primary" onClick={() => { StorageManager.save('ai_config', config); onClose(); }}>
+                    <button 
+                        className="btn-primary" 
+                        onClick={() => { StorageManager.save('ai_config', config); onClose(); }}
+                        aria-label="Einstellungen speichern und schließen"
+                    >
                         Speichern
                     </button>
-                    <button onClick={() => setConfig({...config, systemPrompt: DEFAULT_SYSTEM_PROMPT, promptTemplate: DEFAULT_PROMPT_TEMPLATE})} style={{ padding: '0.75rem 1.5rem', borderRadius: 'var(--radius-sm)', background: 'white', border: '1px solid var(--border)' }}>
+                    <button 
+                        onClick={() => setConfig({...config, systemPrompt: DEFAULT_SYSTEM_PROMPT, promptTemplate: DEFAULT_PROMPT_TEMPLATE})} 
+                        style={{ padding: '0.75rem 1.5rem', borderRadius: 'var(--radius-sm)', background: 'white', border: '1px solid var(--border)' }}
+                        aria-label="Prompts auf Standard zurücksetzen"
+                    >
                         Zurücksetzen
                     </button>
                 </div>
@@ -346,11 +453,52 @@ function SettingsPanel({ isOpen, onClose, config, setConfig }) {
 function App() {
     const [step, setStep] = useState("form");
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+    const [theme, setTheme] = useState("zsl");
     const [config, setConfig] = useState({
         baseUrl: 'https://openwebui.sbbz-ilvesheim.de/api',
         apiKey: '',
         model: ''
     });
+
+    useEffect(() => {
+        const savedTheme = StorageManager.load('app_theme');
+        // Use saved theme if user explicitly chose one, otherwise default to ZSL
+        const effectiveTheme = savedTheme || 'zsl';
+        setTheme(effectiveTheme);
+        document.body.setAttribute('data-theme', effectiveTheme);
+        const favicon = document.querySelector('link[rel="icon"]');
+        if (favicon) {
+            favicon.href = effectiveTheme === 'zsl' ? 'favicon-zsl.svg?v=1' : 'favicon.svg?v=1';
+        }
+    }, []);
+
+    // Keyboard shortcuts
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            // Strg+, or Strg+E: Open settings
+            if ((e.ctrlKey || e.metaKey) && (e.key === ',' || e.key === 'e' || e.key === 'E')) {
+                e.preventDefault();
+                setIsSettingsOpen(true);
+            }
+            // Escape: Close settings
+            if (e.key === 'Escape' && isSettingsOpen) {
+                setIsSettingsOpen(false);
+            }
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [isSettingsOpen]);
+
+    const toggleTheme = (newTheme) => {
+        setTheme(newTheme);
+        document.body.setAttribute('data-theme', newTheme);
+        StorageManager.save('app_theme', newTheme);
+        // Favicon wechseln
+        const favicon = document.querySelector('link[rel="icon"]');
+        if (favicon) {
+            favicon.href = newTheme === 'zsl' ? 'favicon-zsl.svg?v=1' : 'favicon.svg?v=1';
+        }
+    };
 
     const [loading, setLoading] = useState(false);
     const [report, setReport] = useState("");
@@ -490,22 +638,43 @@ function App() {
     };
 
     return (
-        <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-            <button className="settings-trigger" onClick={() => setIsSettingsOpen(true)}>
+        <>
+            <a href="#main-content" className="skip-link">Zum Hauptinhalt springen</a>
+
+            <header className="zsl-header">
+                <div className="zsl-header-inner">
+                    <div className="zsl-header-logo">
+                        <img src="zsl-logo.webp" alt="ZSL Baden-Württemberg" />
+                    </div>
+                    <nav className="zsl-header-nav">Diagnostikbericht Generator</nav>
+                </div>
+            </header>
+
+            <main id="main-content" className="app-container" style={{ maxWidth: '900px', margin: '0 auto' }} role="main">
+            <button 
+                className="settings-trigger" 
+                onClick={() => setIsSettingsOpen(true)}
+                aria-label="Einstellungen öffnen"
+                aria-expanded={isSettingsOpen}
+                aria-controls="settings-panel"
+                title="Einstellungen (Strg+,)"
+            >
                 <Icon name="settings" />
             </button>
 
-            <SettingsPanel 
-                isOpen={isSettingsOpen} 
-                onClose={() => setIsSettingsOpen(false)} 
-                config={config} 
-                setConfig={setConfig} 
-            />
+                <SettingsPanel
+                    isOpen={isSettingsOpen}
+                    onClose={() => setIsSettingsOpen(false)}
+                    config={config}
+                    setConfig={setConfig}
+                    theme={theme}
+                    setTheme={toggleTheme}
+                />
 
-            <div className="title-section">
-                <h1>Diagnostikbericht Generator <span style={{ fontSize: '0.9rem', background: 'var(--primary)', color: 'white', padding: '2px 10px', borderRadius: '12px', verticalAlign: 'middle' }}>{VERSION}</span></h1>
-                <p>Erstellen Sie präzise psychologische Berichte mit lokaler KI-Unterstützung.</p>
-            </div>
+                <div className="title-section">
+                    <h1>Diagnostikbericht Generator <span className="version-badge">{VERSION}</span></h1>
+                    <p>Erstellen Sie präzise psychologische Berichte mit lokaler KI-Unterstützung.</p>
+                </div>
 
             {step === "form" ? (
                 <div className="animate-fade-in">
@@ -568,10 +737,10 @@ function App() {
                     {testauswahl && (
                         <div className="glass-card animate-fade-in">
                             <label>4. ERGEBNISSE NACH INDEXEN</label>
-                            <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', justifyContent: 'center' }}>
-                                <button onClick={() => setActiveTab("primaer")} style={{ color: activeTab === "primaer" ? 'var(--primary)' : 'rgba(255,255,255,0.6)', fontWeight: 700 }}>Primäre Indizes</button>
-                                {sekundaereIndizes.length > 0 && <button onClick={() => setActiveTab("sekundaer")} style={{ color: activeTab === "sekundaer" ? 'var(--primary)' : 'rgba(255,255,255,0.6)', fontWeight: 700 }}>Sekundäre Indizes</button>}
-                                {untertests.length > 0 && <button onClick={() => setActiveTab("untertests")} style={{ color: activeTab === "untertests" ? 'var(--primary)' : 'rgba(255,255,255,0.6)', fontWeight: 700 }}>Untertests</button>}
+                            <div className="tab-bar">
+                                <button className={`tab-button ${activeTab === "primaer" ? 'active' : ''}`} onClick={() => setActiveTab("primaer")}>Primäre Indizes</button>
+                                {sekundaereIndizes.length > 0 && <button className={`tab-button ${activeTab === "sekundaer" ? 'active' : ''}`} onClick={() => setActiveTab("sekundaer")}>Sekundäre Indizes</button>}
+                                {untertests.length > 0 && <button className={`tab-button ${activeTab === "untertests" ? 'active' : ''}`} onClick={() => setActiveTab("untertests")}>Untertests</button>}
                             </div>
 
                             {activeTab === "primaer" && <IndexTable rows={primaereIndizes} onUpdate={updIdx(primaereIndizes, setPrimaereIndizes)} onAdd={() => setPrimaereIndizes(p => [...p, emptyIdx("", "")])} label="Primäre Indizes" konfidenz={TEST_DATA[testauswahl]?.konfidenz || "95%"} sonstiges={testauswahl === "Sonstiges"} />}
@@ -644,7 +813,25 @@ function App() {
                     </div>
                 </div>
             )}
-        </div>
+        </main>
+
+            <footer className="zsl-footer">
+                <div className="zsl-footer-inner">
+                    <div className="zsl-footer-left">
+                        <div className="zsl-footer-logo">
+                            <img src="zsl-logo-white.svg" alt="ZSL Logo" />
+                        </div>
+                        <div className="zsl-footer-text">
+                            <strong>Diagnostikbericht Generator</strong><br/>
+                            Professionelle psychologische Berichte
+                        </div>
+                    </div>
+                    <div className="zsl-footer-right">
+                        {VERSION} &copy; {new Date().getFullYear()}
+                    </div>
+                </div>
+            </footer>
+        </>
     );
 }
 
