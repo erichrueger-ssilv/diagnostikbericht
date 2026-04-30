@@ -309,6 +309,19 @@
     transform: none;
 }
 
+[data-theme="zsl"] .btn-word {
+    padding: 0.5rem 1rem;
+    border-radius: 3px;
+    background: var(--zsl-yellow);
+    color: var(--zsl-dark);
+    font-weight: 700;
+    border: none;
+}
+
+[data-theme="zsl"] .btn-word:hover {
+    background: #e6e300;
+}
+
 /* ── Step Indicator ── */
 [data-theme="zsl"] .step-indicator {
     display: flex;

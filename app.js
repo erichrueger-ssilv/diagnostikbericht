@@ -813,8 +813,8 @@ function App() {
                             <h2 style={{ margin: 0, color: 'var(--text-main)' }}>Bericht</h2>
                             <div style={{ display: 'flex', gap: '0.5rem' }}>
                                 <button 
+                                    className="btn-word"
                                     onClick={exportToWord}
-                                    style={{ padding: '0.5rem 1rem', borderRadius: 'var(--radius-sm)', background: '#2563eb', color: 'white' }}
                                 >
                                     <Icon name="file-text" size={18} /> Word
                                 </button>

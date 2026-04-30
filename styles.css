@@ -143,6 +143,14 @@ button {
     transform: translateY(0);
 }
 
+.btn-word {
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    font-weight: 600;
+}
+
 /* Steps & Progress */
 .step-indicator {
     display: flex;
