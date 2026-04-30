@@ -309,34 +309,6 @@
     transform: none;
 }
 
-/* ── Test Selection Buttons ── */
-[data-theme="zsl"] .test-buttons {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
-}
-
-[data-theme="zsl"] .test-buttons button {
-    background: var(--zsl-white);
-    color: var(--zsl-dark);
-    border: 1px solid var(--zsl-gray);
-    border-radius: 3px;
-    padding: 12px 20px;
-    font-size: 16px;
-    font-weight: 400;
-}
-
-[data-theme="zsl"] .test-buttons button:hover {
-    background: var(--zsl-gray-bg);
-    border-color: var(--zsl-dark);
-}
-
-[data-theme="zsl"] .test-buttons button.active {
-    background: var(--zsl-dark);
-    color: var(--zsl-white);
-    border-color: var(--zsl-dark);
-}
-
 /* ── Step Indicator ── */
 [data-theme="zsl"] .step-indicator {
     display: flex;
@@ -546,15 +518,15 @@
     border-bottom: 1px solid var(--zsl-gray-light);
 }
 
-/* ── Theme Toggle ── */
-.theme-toggle {
+/* ── Theme Toggle (ZSL only) ── */
+[data-theme="zsl"] .theme-toggle {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
     margin-bottom: 1.5rem;
 }
 
-.theme-option {
+[data-theme="zsl"] .theme-option {
     display: flex;
     align-items: flex-start;
     gap: 0.75rem;
@@ -565,24 +537,24 @@
     transition: all 0.2s ease;
 }
 
-.theme-option:hover {
+[data-theme="zsl"] .theme-option:hover {
     border-color: var(--zsl-dark);
     background: var(--zsl-gray-bg);
 }
 
-.theme-option input[type="radio"] {
+[data-theme="zsl"] .theme-option input[type="radio"] {
     width: auto;
     margin-top: 2px;
     accent-color: var(--zsl-dark);
 }
 
-.theme-option-label {
+[data-theme="zsl"] .theme-option-label {
     font-weight: 700;
     color: var(--zsl-dark);
     font-size: 16px;
 }
 
-.theme-option-desc {
+[data-theme="zsl"] .theme-option-desc {
     font-size: 14px;
     color: var(--zsl-dark-light);
     line-height: 1.4;

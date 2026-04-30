@@ -51,22 +51,9 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // API requests: Network first, then cache
+  // API requests: Network only — NEVER cache sensitive KI responses
   if (url.pathname.includes('/api/') || url.pathname.includes('/v1/')) {
-    event.respondWith(
-      fetch(request)
-        .then((response) => {
-          // Clone response for cache
-          const responseClone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(request, responseClone);
-          });
-          return response;
-        })
-        .catch(() => {
-          return caches.match(request);
-        })
-    );
+    event.respondWith(fetch(request));
     return;
   }
 

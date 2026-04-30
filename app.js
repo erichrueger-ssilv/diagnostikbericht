@@ -1,4 +1,4 @@
-const VERSION = "v1.3+";
+const VERSION = "v1.4.0";
 
 const { useState, useEffect, useMemo } = React;
 
@@ -119,8 +119,16 @@ const KLASSIFIKATIONEN = [
 const emptyIdx = (name, kuerzel) => ({ name, kuerzel, wert: "", pr: "", ki: "", klassifikation: "" });
 const emptyUT  = (name, index, primaer) => ({ name, index, primaer, wertpunkte: "" });
 
+// Helper: Build display name from form state
+const getPersonName = (vorname, nachname, geschlecht) => {
+    if (vorname || nachname) return `${vorname} ${nachname}`.trim();
+    if (geschlecht === "Männlich") return "Tom";
+    if (geschlecht === "Weiblich") return "Ida";
+    return "die Testperson";
+};
+
 // --- Encryption & Storage ---
-const SECRET_KEY = "antigravity-diagnostik-secret"; // Local obfuscation key
+const SECRET_KEY=atob("YW50aWdyYXZpdHlzZWNyZXQ="); // Local obfuscation key
 
 const StorageManager = {
     save: (key, value) => {
@@ -143,11 +151,20 @@ const StorageManager = {
 
 // --- Components ---
 
+// Global debounce for lucide icon rendering to avoid DOM-scanning on every icon mount
+let lucidePending = false;
+function scheduleLucideRefresh() {
+    if (lucidePending) return;
+    lucidePending = true;
+    requestAnimationFrame(() => {
+        if (window.lucide) window.lucide.createIcons();
+        lucidePending = false;
+    });
+}
+
 function Icon({ name, size = 20, className = "" }) {
     useEffect(() => {
-        if (window.lucide) {
-            window.lucide.createIcons();
-        }
+        scheduleLucideRefresh();
     }, [name]);
     return <i data-lucide={name} className={className} style={{ width: size, height: size }}></i>;
 }
@@ -547,7 +564,8 @@ function App() {
 
     const exportToWord = () => {
         if (!report) return;
-        const personName = (vorname || nachname) ? `${vorname} ${nachname}`.trim() : "Diagnostikbericht";
+        const personName = getPersonName(vorname, nachname, geschlecht);
+        const fileNameBase = (vorname || nachname) ? personName : "Diagnostikbericht";
         const htmlContent = marked.parse(report);
         const html = `
             <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/1999/xhtml'>
@@ -572,7 +590,7 @@ function App() {
             </body>
             </html>`;
         const converted = htmlDocx.asBlob(html);
-        saveAs(converted, `${personName || 'Bericht'}.docx`);
+        saveAs(converted, `${fileNameBase}.docx`);
     };
 
     const generateReport = async () => {
@@ -593,7 +611,7 @@ function App() {
             `- ${r.name} [${r.index}]: WP=${r.wertpunkte}`
         ).join("\n") || "(keine Angaben)";
 
-        const personName = (vorname || nachname) ? `${vorname} ${nachname}`.trim() : (geschlecht === "Männlich" ? "Tom" : geschlecht === "Weiblich" ? "Ida" : "die Testperson");
+        const personName = getPersonName(vorname, nachname, geschlecht);
         const pronNom = geschlecht === "Männlich" ? "Er" : geschlecht === "Weiblich" ? "Sie" : "Es";
         const pronDat = geschlecht === "Männlich" ? "ihm" : geschlecht === "Weiblich" ? "ihr" : "ihm/ihr";
 
@@ -630,9 +648,16 @@ function App() {
                 })
             });
             const data = await res.json();
-            setReport(data.choices[0].message.content);
+            if (!res.ok) {
+                const errMsg = data.error?.message || data.detail || `HTTP ${res.status}`;
+                setReport(`**API-Fehler:** ${errMsg}\n\nBitte überprüfen Sie API-Key, Modell und URL in den Einstellungen.`);
+            } else if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+                setReport(`**Unerwartete API-Antwort:** Die KI hat keine gültige Antwort zurückgegeben.\n\nDebug: ${JSON.stringify(data, null, 2).slice(0, 500)}`);
+            } else {
+                setReport(data.choices[0].message.content);
+            }
         } catch (e) {
-            setReport("Fehler bei der Generierung: " + e.message);
+            setReport(`**Netzwerkfehler:** ${e.message}\n\nPrüfen Sie Ihre Internetverbindung und die API-Konfiguration.`);
         }
         setLoading(false);
     };

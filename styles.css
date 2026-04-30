@@ -515,6 +515,19 @@ a {
     display: inline-block;
 }
 
+/* Version Badge */
+.version-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    padding: 2px 10px;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    vertical-align: middle;
+    margin-left: 0.5rem;
+}
+
 /* Report View (Rendered Markdown) */
 .report-content {
     background: #fff;
